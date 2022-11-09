@@ -10,7 +10,6 @@ class UserRegistrations(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     gender = models.CharField(max_length=100)
     dob = models.DateField(auto_now_add=True)
-    friends = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Questions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,10 +23,10 @@ class Questions(models.Model):
 
 class Answers(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.CASCADE)
-    answer = models.CharField(max_lengt=200)
+    answer = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     upvote = models.ManyToManyField(User, related_name="upvote")
-    created_date = models.DateField(auto_now_all=True)
+    created_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.answer
