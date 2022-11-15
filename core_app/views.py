@@ -1,4 +1,4 @@
-from django.shortcuts import render
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -17,7 +17,7 @@ class UserView(ModelViewSet):
 class QuestioinsView(ModelViewSet):
     serializer_class = QuestionsSerializer
     queryset = Questions.objects.all()
-    authentication_classes = [authentication.BasicAuthentication]
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -35,7 +35,7 @@ class QuestioinsView(ModelViewSet):
     def add_answer(self, request, *args, **kwargs):
         id = kwargs.get('pk')
         question = Questions.objects.get(id=id)
-        user = request.user
+        user = request.userz
 
         serializer = AnswerSerializer(data=request.data, context={"question":question,"user":user})
         if serializer.is_valid():
@@ -46,10 +46,24 @@ class QuestioinsView(ModelViewSet):
 
     @action(methods=["GET"], detail=True)
     def list_answers(self, request, *args, **kwargs):
-        id = kwargs.get("pk")
-        question = Questions.objects.get(id=id)
+        # id = kwargs.get("pk")
+        question = self.get_object()
         answers = question.answers_set.all()
 
         serializer = AnswerSerializer(answers, many=True)
         return Response(data=serializer.data)
+
+    
+class AnswersView(ModelViewSet):
+    serializer_class = AnswerSerializer
+    queryset = Answers.objects.all()
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(methods=["GET"], detail=True)
+    def upvote(self, request, *args, **kwargs):
+        id = kwargs.get("pk")
+        answer = Answers.objects.get(id=id)
+        answer.upvote.add(request.user)
+        return Response('upvoted')
         
