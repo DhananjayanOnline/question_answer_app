@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, TemplateView
 from .forms import *
+from core_app.models import *
 from django.contrib.auth import authenticate, login
 
 # Create your views here.
@@ -45,5 +46,7 @@ class LoginView(View):
                 return redirect('signin')
 
 
-class IndexView(TemplateView):
-    template_name = 'index.html'
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        qs = Questions.objects.all()
+        return render(request, 'index.html', {'questions':qs})
