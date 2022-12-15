@@ -15,9 +15,17 @@ class UserRegistrations(models.Model):
 class Questions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    describtion = models.CharField(max_length=200)
+    describtion = models.CharField(max_length=2000)
     image = models.ImageField(upload_to="images", null=True)
     date_created = models.DateField(auto_now_add = True)
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
 
     @property
     def question_answer(self):

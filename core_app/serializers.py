@@ -41,11 +41,13 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class QuestionsSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     user=serializers.CharField(read_only=True)
     question_answer=AnswerSerializer(read_only=True, many=True)
     class Meta:
         model = Questions
         fields = [
+            "id",
             "title",
             "describtion",
             "image",
