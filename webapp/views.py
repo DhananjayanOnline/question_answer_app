@@ -1,34 +1,21 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, CreateView, ListView, FormView
+from django.urls import reverse_lazy
 from .forms import *
 from core_app.models import *
 from django.contrib.auth import authenticate, login
 
 # Create your views here.
 
-class RegisterView(View):
-    def get(self, request, *args, **kwargs):
-        form = RegisterForm()
-        context = {
-            "form":form,
-        }
-        return render(request, 'register.html', context)
+class RegisterView(CreateView):
+    template_name = 'register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('signin')
 
-    def post(self, request, *args, **kwargs):
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            User.objects.create_user(**form.cleaned_data)
-            return redirect('signin')
-        else:
-            return render(request, "register.html", {"form":form})
+class LoginView(FormView):
+    template_name = 'login.html'
+    form_class = LoginForm
 
-class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        form = LoginForm()
-        context = {
-            "form":form,
-        }
-        return render(request, 'login.html', context)
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
@@ -45,7 +32,8 @@ class LoginView(View):
                 return redirect('signin')
 
 
-class IndexView(View):
-    def get(self, request, *args, **kwargs):
-        qs = Questions.objects.all()
-        return render(request, 'index.html', {'questions':qs})
+class IndexView(ListView):
+    template_name = 'index.html'
+    model = Questions
+    context_object_name = 'questions'
+    
