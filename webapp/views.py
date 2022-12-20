@@ -39,7 +39,6 @@ class LoginView(View):
             usr = authenticate(request, username=uname, password=pwd)
             if usr:
                 login(request, usr)
-                print(request.user)
                 return redirect('home')
             else:
                 print('login failed')

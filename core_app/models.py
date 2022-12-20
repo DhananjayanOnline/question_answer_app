@@ -20,14 +20,6 @@ class Questions(models.Model):
     date_created = models.DateField(auto_now_add = True)
 
     @property
-    def imageURL(self):
-        try:
-            url = self.image.url
-        except:
-            url = ''
-        return url
-
-    @property
     def question_answer(self):
         answers=self.answers_set.all()
         qs = answers.annotate(u_count=Count('upvote')).order_by('-u_count')
