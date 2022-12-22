@@ -18,6 +18,15 @@
                     {% csrf_token %}
 
                     {{form.as_p}}
+
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
                     <button type="submit" class="btn btn-outline-secondary btn-sm form-control">Login</button>
                 </form>
             </div>

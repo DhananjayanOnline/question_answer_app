@@ -16,8 +16,8 @@ class Questions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     describtion = models.CharField(max_length=2000)
-    image = models.ImageField(upload_to="images", null=True)
-    date_created = models.DateField(auto_now_add = True)
+    image = models.ImageField(upload_to="images", null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     @property
     def question_answer(self):
